@@ -69,9 +69,9 @@ module Parser
 end
 
 count_map = { :keys => {}, :values => {}}
-android_map = Parser::read_android("/Users/bharathmg/Downloads/strings.xml", count_map)
-ios_map = Parser::read_ios("/Users/bharathmg/Downloads/ios.strings", count_map)
-# puts "android:  #{android_map.count} ios: #{ios_map.count} count_map: #{count_map.count}"
+android_map = Parser::read_android(ARGV[0], count_map)
+ios_map = Parser::read_ios(ARGV[1], count_map)
+
 
 count_map.select { |key, value| value == 1  }.each  { |key, value|
   if android_map.has_key?(key)
