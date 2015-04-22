@@ -1,4 +1,5 @@
 require "cgi"
+require "colorize"
 
 module Parser
   def Parser.read_android(path, count_map)
@@ -76,10 +77,10 @@ def Parser.run(android_string, ios_string)
 
   count_map.select { |key, value| value == 1  }.each  { |key, value|
     if android_map.has_key?(key)
-      puts "ISSUE: Key #{key} is absent in iOS resource file"
+      puts "ISSUE: Key #{key} is absent in iOS resource file".red
       android_extra_keys_count += 1
     else
-      puts "ISSUE: Key #{key} is absent in Android resource file"
+      puts "ISSUE: Key #{key} is absent in Android resource file".red
       ios_extra_keys_count += 1
     end
   }
@@ -88,7 +89,7 @@ def Parser.run(android_string, ios_string)
   ios_map.each { |key, value|
     if android_map.include?(key) && !android_map[key].eql?(value)
       mismatch_count += 1
-      puts "ISSUE: [#{key} => #{value}] on iOS is different from [#{key} => #{android_map[key]}] on Android"
+      puts "ISSUE: [#{key} => #{value}] on iOS is different from [#{key} => #{android_map[key]}] on Android".red
     end
   }
 
@@ -100,9 +101,9 @@ def Parser.run(android_string, ios_string)
   puts "Number of extra keys in ios: #{ios_extra_keys_count}"
 
   if mismatch_count == 0 && android_extra_keys_count == 0 && ios_extra_keys_count == 0
-    puts "SUCCESS"
+    puts "SUCCESS".green
   else
-    puts "FAILURE"
+    puts "FAILURE".red
   end
 end
 
