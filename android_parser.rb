@@ -105,6 +105,8 @@ def Parser.run(android_string, ios_string)
     puts "AAAGA MOTHATHULA FAILURUUUU.."
   end
   puts "VARATUMA...AAGN"
+
+  puts %x( cat vij )
 end
 
 end
