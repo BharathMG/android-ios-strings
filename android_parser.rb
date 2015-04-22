@@ -1,5 +1,7 @@
 require "cgi"
 require "colorize"
+require './ios-to-and.rb'
+
 
 module Parser
   def Parser.read_android(path, count_map)
@@ -74,13 +76,14 @@ def Parser.run(android_string, ios_string)
   android_extra_keys_count = 0
   ios_extra_keys_count = 0
 
-
+  android_strings = []
   count_map.select { |key, value| value == 1  }.each  { |key, value|
     if android_map.has_key?(key)
       puts "ISSUE: Key \"#{android_map[key][:key]}\" is absent in iOS resource file".red
       android_extra_keys_count += 1
     else
       puts "ISSUE: Key \"#{ios_map[key][:key]}\" is absent in Android resource file".red
+      android_strings << "<string name=\"#{Converter::androidify(ios_map[key][:key])}\"> \"#{ios_map[key][:value]}\" </string>".green
       ios_extra_keys_count += 1
     end
   }
@@ -89,7 +92,7 @@ def Parser.run(android_string, ios_string)
   ios_map.each { |key, hash|
     if android_map.include?(key) && !android_map[key][:value].eql?(hash[:value])
       mismatch_count += 1
-      puts "ISSUE: [#{hash[:key]} => #{hash[:value]}] on iOS is different from [#{android_map[key][:key]} => #{android_map[key][:value]}] on Android".red
+      puts "ISSUE: [#{hash[:key]} => #{hash[:value]}] in iOS is different from [#{android_map[key][:key]} => #{android_map[key][:value]}] in Android".red
     end
   }
 
@@ -104,6 +107,13 @@ def Parser.run(android_string, ios_string)
     puts "SUCCESS".green
   else
     puts "FAILURE".red
+  end
+
+  if !android_strings.empty?
+    puts "\n Please include the following line in strings.xml".green
+    android_strings.each do |line|
+      puts line
+    end
   end
 end
 
