@@ -17,7 +17,7 @@ module Parser
           key_match = key_regex.match(line)
           if key_match
 
-            key = key_match[1]
+            original_key,key = key_match[1], key_match[1]
             key.downcase!
             value_match = value_regex.match(line)
             if value_match
@@ -31,7 +31,7 @@ module Parser
             end
             key.gsub!(/[^a-zA-Z0-9]/, '')
             key.strip!
-            strings_map[key] = value
+            strings_map[key] = { :key => original_key, :value => value }
             count_map[key] = count_map[key].to_i + 1
           end
         end
@@ -48,13 +48,13 @@ module Parser
       while line = (sep) ? f.gets(sep) : f.gets
         match = /"((?:[^"\\]|\\.)+)"\s*=\s*"((?:[^"\\]|\\.)*)"/.match(line)
         if match
-          key = match[1]
+          original_key, key = match[1], match[1]
           key.downcase!
           value = match[2]
           value.gsub!('\\"', '"')
           key.gsub!(/[^a-zA-Z0-9]/, '')
           key.strip!
-          ios_map[key] =value
+          ios_map[key] = { :key => original_key, :value => value }
           count_map[key] = count_map[key].to_i + 1
         end
       end
@@ -77,19 +77,19 @@ def Parser.run(android_string, ios_string)
 
   count_map.select { |key, value| value == 1  }.each  { |key, value|
     if android_map.has_key?(key)
-      puts "ISSUE: Key #{key} is absent in iOS resource file".red
+      puts "ISSUE: Key \"#{android_map[key][:key]}\" is absent in iOS resource file".red
       android_extra_keys_count += 1
     else
-      puts "ISSUE: Key #{key} is absent in Android resource file".red
+      puts "ISSUE: Key \"#{ios_map[key][:key]}\" is absent in Android resource file".red
       ios_extra_keys_count += 1
     end
   }
 
 
-  ios_map.each { |key, value|
-    if android_map.include?(key) && !android_map[key].eql?(value)
+  ios_map.each { |key, hash|
+    if android_map.include?(key) && !android_map[key][:value].eql?(hash[:value])
       mismatch_count += 1
-      puts "ISSUE: [#{key} => #{value}] on iOS is different from [#{key} => #{android_map[key]}] on Android".red
+      puts "ISSUE: [#{hash[:key]} => #{hash[:value]}] on iOS is different from [#{android_map[key][:key]} => #{android_map[key][:value]}] on Android".red
     end
   }
 
