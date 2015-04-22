@@ -92,18 +92,19 @@ def Parser.run(android_string, ios_string)
     end
   }
 
-  puts "\n\nTotal number of keys in android:  #{android_map.count}"
-  puts "Total number of keys in iOS:  #{ios_map.count}"
+  puts "\n\nAndroid la motham :  #{android_map.count} key"
+  puts "IOS la :  #{ios_map.count} key"
 
-  puts "Number of value mismatches: #{mismatch_count}"
-  puts "Number of extra keys in android: #{android_extra_keys_count}"
-  puts "Number of extra keys in ios: #{ios_extra_keys_count}"
+  puts "Athula #{mismatch_count} mismatchuuu"
+  puts "Itha thavara android la egstra #{android_extra_keys_count}  key"
+  puts "IOS la #{ios_extra_keys_count} key"
 
   if mismatch_count == 0 && android_extra_keys_count == 0 && ios_extra_keys_count == 0
-    puts "SUCCESS"
+    puts "he he.. AAGA MOTHATHULA VETRI..."
   else
-    puts "FAILURE"
+    puts "AAAGA MOTHATHULA FAILURUUUU.."
   end
+  puts "VARATUMA...AAGN"
 end
 
 end
