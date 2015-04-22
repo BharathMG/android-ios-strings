@@ -1,0 +1,4 @@
+desc "compare ios and android strings"
+task :compare_ios_android do
+  ruby android_parser.rb ENV['ANDROID_STRING'] ENV['IOS_STRING']
+end
