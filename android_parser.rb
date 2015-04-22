@@ -9,8 +9,6 @@ module Parser
     key = nil
     value = nil
     strings_map = {}
-    keys_count = count_map[:keys]
-    values_count = count_map[:values]
     File.open(path, 'r:UTF-8') do |f|
       content_match = resources_regex.match(f.read)
       if content_match
@@ -45,8 +43,6 @@ module Parser
   def Parser.read_ios(path, count_map)
     sep = "\n"
     ios_map = {}
-    keys_count = count_map[:keys]
-    values_count = count_map[:values]
     File.open(path, 'r:UTF-8') do |f|
       while line = (sep) ? f.gets(sep) : f.gets
         match = /"((?:[^"\\]|\\.)+)"\s*=\s*"((?:[^"\\]|\\.)*)"/.match(line)
@@ -66,39 +62,48 @@ module Parser
   end
 
 
+
+
+def Parser.run(android_string, ios_string)
+  count_map = {}
+  android_map = Parser::read_android(android_string, count_map)
+  ios_map = Parser::read_ios(ios_string, count_map)
+
+  mismatch_count = 0
+  android_extra_keys_count = 0
+  ios_extra_keys_count = 0
+
+
+  count_map.select { |key, value| value == 1  }.each  { |key, value|
+    if android_map.has_key?(key)
+      puts "ISSUE: Key #{key} is absent in iOS resource file"
+      android_extra_keys_count += 1
+    else
+      puts "ISSUE: Key #{key} is absent in Android resource file"
+      ios_extra_keys_count += 1
+    end
+  }
+
+
+  ios_map.each { |key, value|
+    if android_map.include?(key) && !android_map[key].eql?(value)
+      mismatch_count += 1
+      puts "ISSUE: [#{key} => #{value}] on iOS is different from [#{key} => #{android_map[key]}] on Android"
+    end
+  }
+
+  puts "\n\nTotal number of keys in android:  #{android_map.count}"
+  puts "Total number of keys in iOS:  #{ios_map.count}"
+
+  puts "Number of value mismatches: #{mismatch_count}"
+  puts "Number of extra keys in android: #{android_extra_keys_count}"
+  puts "Number of extra keys in ios: #{ios_extra_keys_count}"
+
+  if mismatch_count == 0 && android_extra_keys_count == 0 && ios_extra_keys_count == 0
+    puts "SUCCESS"
+  else
+    puts "FAILURE"
+  end
 end
 
-count_map = { :keys => {}, :values => {}}
-android_map = Parser::read_android(ARGV[0], count_map)
-ios_map = Parser::read_ios(ARGV[1], count_map)
-
-mismatch_count = 0
-android_extra_count = 0
-ios_extra_count = 0
-
-
-count_map.select { |key, value| value == 1  }.each  { |key, value|
-  if android_map.has_key?(key)
-    puts "#{key} is absent in iOS resource file"
-    android_extra_count += 1
-  else
-    puts "#{key} is absent in Android resource file"
-    ios_extra_count += 1
-  end
-}
-
-
-ios_map.each { |key, value|
-
-  if android_map.include?(key) && !android_map[key].eql?(value)
-    mismatch_count += 1
-    puts "[#{key} => #{value}] on iOS is different from [#{key} => #{android_map[key]}] on Android"
-  end
-}
-
-puts "\n\nTotal number of keys in android:  #{android_map.count}"
-puts "Total number of keys in iOS:  #{ios_map.count}"
-
-puts "Number of value mismatches: #{mismatch_count}"
-puts "Number of extra keys in android: #{android_extra_count}"
-puts "Number of extra keys in ios: #{ios_extra_count}"
+end
