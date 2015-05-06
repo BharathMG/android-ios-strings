@@ -6,6 +6,9 @@ require './ios-to-and.rb'
 module Parser
   class Analyser
     @@count_map = {}
+    PRE_QUOTE_WITH_SPACE = " \""
+    POST_QUOTE_WITH_SPACE = "\" "
+
 
     def processAndTrack(original_key, key, value)
       key.gsub!(/[^a-zA-Z0-9]/, '')
@@ -24,6 +27,8 @@ module Parser
       android_map = android_parser.read(android_string)
       ios_map = ios_parser.read(ios_string)
 
+
+
       mismatch_count = 0
 
       count_map.select { |key, value| value == 1 }.each { |key, value|
@@ -33,9 +38,8 @@ module Parser
         end
       }
 
-
       ios_map.each { |key, hash|
-        if android_map.include?(key) && !android_map[key][:value].eql?(hash[:value])
+        if android_map.include?(key) && !android_map[key][:value].eql?(PRE_QUOTE_WITH_SPACE + hash[:value] + POST_QUOTE_WITH_SPACE)
           mismatch_count += 1
           puts "ISSUE: [#{hash[:key]} => #{hash[:value]}] in iOS is different from [#{android_map[key][:key]} => #{android_map[key][:value]}] in Android".red
         end
