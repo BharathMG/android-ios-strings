@@ -103,18 +103,21 @@ def Parser.run(android_string, ios_string)
   puts "Number of extra keys in android: #{android_extra_keys_count}"
   puts "Number of extra keys in ios: #{ios_extra_keys_count}"
 
-  if mismatch_count == 0 && android_extra_keys_count == 0 && ios_extra_keys_count == 0
-    puts "SUCCESS".green
-  else
-    puts "FAILURE".red
-  end
-
   if !android_strings.empty?
     puts "\n Please include the following line in strings.xml".green
     android_strings.each do |line|
       puts line
     end
   end
+
+  if mismatch_count == 0 && android_extra_keys_count == 0 && ios_extra_keys_count == 0
+    puts "SUCCESS".green
+  else
+    puts "FAILURE".red
+    raise "Mismatch found"
+  end
+
+
 end
 
 end
