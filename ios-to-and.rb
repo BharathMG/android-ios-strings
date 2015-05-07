@@ -23,7 +23,9 @@ module Converter
 
 
   def Converter.androidify(key)
+    key[-1] = key[-1].gsub(/[^a-zA-Z0-9]/, "")
     key.gsub!(/[^a-zA-Z0-9]/, "_")
+
     key.downcase!
     key
   end

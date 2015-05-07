@@ -5,7 +5,7 @@ require './ios-to-and.rb'
 
 module Parser
   class Analyser
-    @@count_map = {}    
+    @@count_map = {}
     def processAndTrack(original_key, key, value)
       key.gsub!(/[^a-zA-Z0-9]/, '')
       key.strip!
@@ -90,7 +90,6 @@ module Parser
       if value_match
         value = value_match[1]
         value = CGI.unescapeHTML(value)
-        value.gsub!('\\\'', '\'')
         value.gsub!('\\"', '"')
         value.gsub!(/(\\u0020)*|(\\u0020)*\z/) { |spaces| ' ' * (spaces.length / 6) }
       else
@@ -169,6 +168,7 @@ module Parser
       key.downcase!
       value = match[2]
       value.gsub!('\\"', '"')
+      value.gsub!("'") { |value_to_replace| "\\" + value_to_replace }
       return original_key, key, value
     end
 
