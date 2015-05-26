@@ -93,6 +93,8 @@ module Parser
         value = CGI.unescapeHTML(value)
         value.gsub!('\\"', '"')
         value.gsub!(/(\\u0020)*|(\\u0020)*\z/) { |spaces| ' ' * (spaces.length / 6) }
+        value.gsub!('\n',' ')
+        value.gsub!(/%[0-9]\$s/,"%s")
       else
         value = ""
       end
@@ -171,6 +173,7 @@ module Parser
       value.gsub!('\\"', '"')
       value.gsub!("'") { |value_to_replace| "\\" + value_to_replace }
       value.gsub!("%@","%s")
+      value.gsub!('\n',' ')
       return original_key, key, value
     end
 
