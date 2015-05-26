@@ -127,7 +127,7 @@ module Parser
 
     def has_extra_keys_issue(key)
       if source_map.has_key?(key)
-        puts "ISSUE: Key \"#{source_map[key][:key]}\" is absent in iOS resource file".red
+        #puts "ISSUE: Key \"#{source_map[key][:key]}\" is absent in iOS resource file".red
         @android_extra_keys_count += 1
         return true
       end
@@ -192,7 +192,7 @@ module Parser
 
     def raise_extra_keys_issue(key)
       if source_map.has_key?(key)
-        puts "ISSUE: Key \"#{source_map[key][:key]}\" is absent in Android resource file".red
+        #puts "ISSUE: Key \"#{source_map[key][:key]}\" is absent in Android resource file".red
         @ios_extra_keys_count += 1
       end
     end
