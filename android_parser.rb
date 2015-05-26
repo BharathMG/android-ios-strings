@@ -51,7 +51,7 @@ module Parser
       if !android_parser.get_android_strings.empty?
         puts "\n Please include the following line in strings.xml".green
         android_parser.get_android_strings.each do |line|
-          puts line
+          puts line.gsub!("%@","%s")
         end
       end
 

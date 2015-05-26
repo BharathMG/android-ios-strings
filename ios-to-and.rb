@@ -12,6 +12,7 @@ module Converter
           androidify(tag)
           value.gsub!(/&/, "&amp;")
           value.gsub!("'","\\\\'")
+          value.gsub!("%@","%s")
           f.write("\t<string name=\"#{tag}\">#{value}</string>\n")
         end
       end
