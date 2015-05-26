@@ -34,6 +34,7 @@ module Parser
         end
       }
 
+      puts "\n\nMISMATCHES\n"
       ios_map.each { |key, hash|
         if android_map.include?(key) && !android_map[key][:value].eql?(hash[:value])
           mismatch_count += 1
@@ -169,6 +170,7 @@ module Parser
       value = match[2]
       value.gsub!('\\"', '"')
       value.gsub!("'") { |value_to_replace| "\\" + value_to_replace }
+      value.gsub!("%@","%s")
       return original_key, key, value
     end
 
