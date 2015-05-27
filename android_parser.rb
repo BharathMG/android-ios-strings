@@ -17,7 +17,14 @@ module Parser
       @@count_map
     end
 
-    def self.generate_report(android_string, ios_string)
+    def self.generate_report(android_string, ios_string, ignored_string)
+      ignored_keys = Array.new
+      File.foreach( ignored_string ) do |line|
+        line.gsub!("_","")
+        ignored_keys.push(line.strip)
+      end
+
+
       android_parser = Parser::AndroidParser.new
       ios_parser = Parser::IosParser.new
       android_map = android_parser.read(android_string)
@@ -36,7 +43,7 @@ module Parser
 
       puts "\n\nMISMATCHES\n"
       ios_map.each { |key, hash|
-        if android_map.include?(key) && !android_map[key][:value].eql?(hash[:value])
+        if !ignored_keys.include?(key.strip) && android_map.include?(key) && !android_map[key][:value].eql?(hash[:value])
           mismatch_count += 1
           puts "ISSUE: [#{hash[:key]} => #{hash[:value]}] in iOS is different from [#{android_map[key][:key]} => #{android_map[key][:value]}] in Android".red
         end
@@ -205,7 +212,7 @@ module Parser
 
 
 
-  def Parser.run(android_string, ios_string)
-    Analyser.generate_report(android_string, ios_string)
+  def Parser.run(android_string, ios_string, ignored_string)
+    Analyser.generate_report(android_string, ios_string, ignored_string)
   end
 end

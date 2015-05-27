@@ -3,7 +3,7 @@ require './ios-to-and.rb'
 
 desc "Compare iOS and Android strings"
 task :compare do
-  Parser::run(ENV['ANDROID_STRING'],ENV['IOS_STRING'])
+  Parser::run(ENV['ANDROID_STRING'],ENV['IOS_STRING'],ENV['IGNORED_STRING'])
 end
 
 desc "Generate Android strings from iOS resource"
