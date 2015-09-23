@@ -1,4 +1,5 @@
 require 'colorize'
+
 module Converter
   def Converter.run(path)
     File.open("strings.xml","w") { |f|
@@ -22,7 +23,6 @@ module Converter
       puts "Converted ios strings to android strings.".green
     }
   end
-
 
   def Converter.androidify(key)
     key[-1] = key[-1].gsub(/[^a-zA-Z0-9]/, "")
