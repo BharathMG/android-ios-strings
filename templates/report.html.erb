@@ -1,0 +1,151 @@
+<html>
+
+<head>
+  <title>Android IOS translation</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <style>
+    td {
+      overflow-x: hidden;
+      overflow-y: hidden;
+      max-width: 30px;
+    }
+
+    dt {
+      float: left;
+      padding-right: 10px;
+    }
+
+    body {
+      padding-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+
+        <div class="well">
+          <h1>Result</h1>
+          <dl>
+            <dt>Mismatch count:</dt>
+            <dd>
+              <%= @mismatches.count %>
+            </dd>
+            <dt>Missing translations in Android:</dt>
+            <dd>
+              <%= @missing_in_android.count %>
+            </dd>
+            <dt>Missing translations in iOS:</dt>
+            <dd>
+              <%= @missing_in_ios.count %>
+            </dd>
+          </dl>
+        </div>
+
+        <ul class="nav nav-tabs" role="tablist" id="translation_tab">
+          <li role="presentation" class="active">
+            <a href="#mismatch" aria-controls="home" role="tab" data-toggle="tab">Mismatch</a>
+          </li>
+          <li role="presentation">
+            <a href="#android" aria-controls="profile" role="tab" data-toggle="tab">Android</a>
+          </li>
+          <li role="presentation">
+            <a href="#ios" aria-controls="messages" role="tab" data-toggle="tab">iOS</a>
+          </li>
+        </ul>
+
+        <div class="tab-content">
+          <div role="tabpanel" class="tab-pane active" id="mismatch">
+            <table class="table table-striped">
+              <caption>Found the following mismatches between android and iOS</caption>
+              <thead>
+                <tr>
+                  <td class="col-md-4">Key</td>
+                  <td class="col-md-4">Android</td>
+                  <td class="col-md-4">iOS</td>
+                </tr>
+              </thead>
+              <tbody>
+                <% @mismatches.each do |translation| %>
+                  <tr>
+                    <td class="col-md-4">
+                      <%= translation[:key] %>
+                    </td>
+                    <td class="col-md-4">
+                      <%= translation[:android] %>
+                    </td>
+                    <td class="col-md-4">
+                      <%= translation[:ios] %>
+                    </td>
+                  </tr>
+                  <% end %>
+              </tbody>
+            </table>
+          </div>
+
+          <div role="tabpanel" class="tab-pane" id="android">
+            <table class="table table-striped">
+              <caption>Following translations are missing in Android</caption>
+              <thead>
+                <tr>
+                  <td class="col-md-6">Key</td>
+                  <td class="col-md-6">iOS Translation</td>
+                </tr>
+              </thead>
+              <tbody>
+                <% @missing_in_android.each do |translation| %>
+                  <tr>
+                    <td class="col-md-6">
+                      <%= translation[:key] %>
+                    </td>
+                    <td class="col-md-6">
+                      <%= translation[:value] %>
+                    </td>
+                  </tr>
+                  <% end %>
+              </tbody>
+            </table>
+          </div>
+
+          <div role="tabpanel" class="tab-pane" id="ios">
+            <table class="table table-striped">
+              <caption>Following translations are missing in iOS</caption>
+              <thead>
+                <tr>
+                  <td>Key</td>
+                  <td>Android Translation</td>
+                </tr>
+              </thead>
+              <tbody>
+                <% @missing_in_ios.each do |translation| %>
+                  <tr>
+                    <td>
+                      <%= translation[:key] %>
+                    </td>
+                    <td>
+                      <%= translation[:value] %>
+                    </td>
+                  </tr>
+                  <% end %>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+<script>
+  $('#translation_tab a').click(function(e) {
+    e.preventDefault()
+    $(this).tab('show')
+  })
+</script>
+
+</html>

@@ -1,13 +1,11 @@
-# android-ios-strings
+android-ios-strings
+===================
+
 Tool to compare Android and iOS Strings resources. Inspired from Twine repo.
 
-## Usage
-###Convert ios strings to android
-execute `ruby ios-to-android "ios string resource name"`
-
-the output will be stored in a file named "strings.xml" in the current working directory
+Usage
+-----
 
 ###Compare ios strings to android
-execute `ruby android_parser.rb "android string resource name" "ios string resource name"`
 
-the output will be printed in the console
+`rake compare["../ios-app/qbo/qbo/en.lproj/Localizable.strings","../qbo-android-app/app/src/main/res/values/strings.xml","../qbo-android-app/app/src/main/res/raw/ignored_strings","en"]`
